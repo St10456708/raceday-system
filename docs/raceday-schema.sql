@@ -146,3 +146,4 @@ INSERT INTO Results (enrolment_id, finish_time, position, status) VALUES
 (1, '00:52:14', 5, 'Finished'),
 (2, '00:24:30', 12, 'Finished');
 GO
+Add author comment to SQL script
