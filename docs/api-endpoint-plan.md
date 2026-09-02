@@ -48,3 +48,4 @@
 | POST | /api/enrolments/{id}/result | Captures a finishing result for a participant's enrolment. | Organiser (of the event) | { finishTime, position, status } | 201 Created - returns new result. 403 Forbidden - not the event organiser. 404 Not Found - enrolment does not exist. |
 | GET | /api/events/{id}/results | Lists all results for an event (leaderboard). | None (public) | None | 200 OK - returns array of results. 404 Not Found - event does not exist. |
 | GET | /api/users/me/results | Returns the logged-in participant's personal performance history across all events. | Participant | None | 200 OK - returns array of past results. 401 Unauthorized. |
+Improve formatting of API endpoint plan
