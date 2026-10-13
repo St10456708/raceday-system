@@ -1,0 +1,39 @@
+name: RaceDay Part 2 - Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          for f in README.md docs/erd.png docs/api-endpoint-plan.md docs/raceday-schema.sql Part2-API/Part2-API.sln Part2-API/RaceDayApi/RaceDayApi.csproj Part2-API/RaceDayApi.Tests/RaceDayApi.Tests.csproj; do
+            if [ ! -f "$f" ]; then
+              echo "ERROR: required file missing: $f"
+              exit 1
+            fi
+            echo "found $f"
+          done
+          echo "Repository structure validation passed."
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Part2-API/Part2-API.sln
+
+      - name: Build
+        run: dotnet build Part2-API/Part2-API.sln --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test Part2-API/Part2-API.sln --no-build --configuration Release --verbosity normal
