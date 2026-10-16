@@ -40,7 +40,7 @@ A GitHub Actions workflow (`.github/workflows/validate-structure.yml`) runs on e
 
 ## Video Walkthrough
 
-Watch the full planning walkthrough here: [YouTube link](PASTE_YOUR_UNLISTED_YOUTUBE_LINK_HERE)
+Watch the full planning walkthrough here: [YouTube link](https://youtu.be/VwANrvkZYzs)
 
 The video covers: the ERD design decisions, the API endpoint plan choices, the SQL script design, and a live run of the SQL script in SQL Server Management Studio (SSMS).
 Expand system description in README
