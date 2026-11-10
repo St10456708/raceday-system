@@ -1,8 +1,69 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<EventDto>
+@{
+    ViewData["Title"] = "Upcoming Events";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<section class="rd-hero">
+    <h1>Find your next race</h1>
+    <p>Browse upcoming runs, walks and rides across South Africa and enter in seconds.</p>
+</section>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form method="get" class="rd-card p-3 mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3"><label class="form-label">Search</label><input name="q" value="@ViewBag.Q" class="form-control" placeholder="Event name..." /></div>
+        <div class="col-md-2">
+            <label class="form-label">Type</label>
+            <select name="type" class="form-select">
+                <option value="">All</option>
+                @foreach (var t in new[] { "Run", "Walk", "Cycle" })
+                {
+                    <option value="@t" selected="@((string?)ViewBag.Type == t)">@t</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3"><label class="form-label">City</label><input name="city" value="@ViewBag.City" class="form-control" placeholder="Pretoria" /></div>
+        <div class="col-md-2"><label class="form-label">From date</label><input type="date" name="from" value="@ViewBag.From" class="form-control" /></div>
+        <div class="col-md-2 d-flex gap-2">
+            <button class="btn btn-rd flex-fill">Filter</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+        </div>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var e in Model)
+    {
+        <div class="col">
+            <div class="rd-card hover h-100 d-flex flex-column">
+                @if (!string.IsNullOrEmpty(e.BannerUrl))
+                {
+                    <img src="@e.BannerUrl" class="rd-banner" alt="@e.EventName banner" />
+                }
+                else
+                {
+                    <div class="rd-banner rd-banner-ph">@ViewHelpers.TypeIcon(e.EventType)</div>
+                }
+                <div class="p-3 d-flex flex-column flex-fill">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="badge bg-dark">@e.EventType</span>
+                        <partial name="_StatusBadge" model="e.Status" />
+                    </div>
+                    <h4 class="mb-1">@e.EventName</h4>
+                    <div class="text-muted small">📅 @e.EventDate.ToString("dd MMM yyyy") &nbsp; 📍 @(e.Venue?.City ?? "TBA")</div>
+                    <div class="small mt-2">@(e.Categories.Any() ? "From R" + e.Categories.Min(c => c.Price).ToString("0.00") + " - " + e.Categories.Count + " categories" : "Categories coming soon")</div>
+                    <a class="btn btn-rd mt-auto align-self-start mt-3" asp-action="Details" asp-route-id="@e.EventId">View event</a>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@if (!Model.Any())
+{
+    <div class="text-center text-muted py-5">No events match your filters.</div>
+}
