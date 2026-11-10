@@ -1,0 +1,38 @@
+@model ProfileVm
+@{
+    ViewData["Title"] = "My Profile";
+}
+<h2>My profile</h2>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="rd-card p-4 text-center">
+            @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+            {
+                <img src="@Model.ProfilePictureUrl" class="rd-avatar mb-3" alt="Profile picture" />
+            }
+            else
+            {
+                <div class="rd-avatar-ph mx-auto mb-3">@(Model.FullName.Length > 0 ? Model.FullName.Substring(0, 1).ToUpper() : "?")</div>
+            }
+            <span class="badge rd-role mb-3">@Model.Role</span>
+            <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+                <input type="file" name="picture" accept="image/*" class="form-control mb-2" />
+                <button class="btn btn-outline-rd btn-sm w-100">Upload picture</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="rd-card p-4">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <form asp-action="Profile" method="post">
+                <div class="mb-3"><label class="form-label">Email</label><input value="@Model.Email" class="form-control" disabled /></div>
+                <div class="mb-3"><label asp-for="FullName" class="form-label"></label><input asp-for="FullName" class="form-control" /><span asp-validation-for="FullName" class="text-danger"></span></div>
+                <div class="mb-3"><label asp-for="PhoneNumber" class="form-label"></label><input asp-for="PhoneNumber" class="form-control" /><span asp-validation-for="PhoneNumber" class="text-danger"></span></div>
+                <button class="btn btn-rd">Save changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
