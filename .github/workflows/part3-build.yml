@@ -1,0 +1,46 @@
+name: RaceDay Part 3 - Build MVC, API and Docker
+
+on:
+  push:
+    branches: [ main, part3-mvc ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          for f in README.md docker-compose.yml .env.example Part2-API/RaceDayApi/Dockerfile Part3-MVC/Part3-MVC.sln Part3-MVC/RaceDayWeb/RaceDayWeb.csproj Part3-MVC/RaceDayWeb/Dockerfile; do
+            if [ ! -f "$f" ]; then
+              echo "ERROR: required file missing: $f"
+              exit 1
+            fi
+            echo "found $f"
+          done
+          echo "Repository structure validation passed."
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build and test API
+        run: |
+          dotnet restore Part2-API/Part2-API.sln
+          dotnet build Part2-API/Part2-API.sln --no-restore --configuration Release
+          dotnet test Part2-API/Part2-API.sln --no-build --configuration Release
+
+      - name: Build MVC project
+        run: |
+          dotnet restore Part3-MVC/Part3-MVC.sln
+          dotnet build Part3-MVC/Part3-MVC.sln --no-restore --configuration Release
+
+      - name: Build Docker images
+        run: |
+          cp .env.example .env
+          docker compose build
