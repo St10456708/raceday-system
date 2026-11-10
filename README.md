@@ -71,6 +71,6 @@ GitHub Actions (`.github/workflows/part3-build.yml`) validates the repository st
 
 ## Video Walkthrough
 
-Part 3 demo (unlisted): [YouTube link](PASTE-YOUTUBE-LINK-HERE)
+Part 3 demo (unlisted): [YouTube link](https://youtu.be/0qajjo5KYj0)
 
 Part 1 planning video: [YouTube link](https://youtu.be/VwANrvkZYzs)
