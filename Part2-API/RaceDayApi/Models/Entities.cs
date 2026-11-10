@@ -24,6 +24,9 @@ public class AppUser
     [Column("phone_number", TypeName = "varchar(20)")]
     public string? PhoneNumber { get; set; }
 
+    [Column("profile_picture_url", TypeName = "varchar(500)")]
+    public string? ProfilePictureUrl { get; set; }
+
     [Column("created_at", TypeName = "datetime")]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }
@@ -51,6 +54,9 @@ public class RaceEvent
 
     [Required, Column("status", TypeName = "varchar(20)")]
     public string Status { get; set; } = "Upcoming";
+
+    [Column("banner_url", TypeName = "varchar(500)")]
+    public string? BannerUrl { get; set; }
 
     [Column("created_at", TypeName = "datetime")]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
