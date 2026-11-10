@@ -1,46 +1,76 @@
-# RaceDay — Event Management System
+# RaceDay - Event Management System
 
-## System Description
+RaceDay is a full-stack web platform for South African road running, walking and cycling events.
+Organisers create events and capture results; Participants browse, enter events and track their race history.
 
-RaceDay is a full-stack, web-based event management system built for the South African road running, walking, and cycling community. The platform allows Event Organisers to create and manage events, categories, and participant results, while Participants can browse upcoming events, enter events, track their personal performance history, and prepare for race day using live weather and route information.
+## Roles and Features
 
-This repository contains Part 1 of the project: system planning and database design, completed before any application code was written.
+**Organiser:** dashboard (events, enrolments per event, upcoming dates), create/edit/delete events with banner upload (Azure Blob), manage categories (distance or age), view enrolments with status, capture and publish finish times and positions.
 
-## Roles
+**Participant:** home page with filtering (name, type, city, date), event detail with categories, enrol in a category, My Events (with colour-coded status: green = Confirmed, amber = Pending, red = Cancelled), My Results (e.g. "47th out of 312 finishers"), profile with picture upload.
 
-- **Organiser** — creates and manages events, defines race categories (e.g. distance, price), and captures participant results after each event.
-- **Participant** — browses upcoming events, enrols in race categories, and views their personal enrolment and results history.
+**Security:** session-based authentication, role-based navigation, protected pages redirect unauthenticated users to Login, logout clears the session.
+
+## Architecture
+
+```
+Browser -> Part3-MVC/RaceDayWeb (ASP.NET Core MVC, no database access)
+              -> Part2-API/RaceDayApi (REST API, session auth, EF Core)
+                    -> SQL Server
+                    -> Azure Blob Storage (banners and profile pictures)
+```
+The MVC app only talks to the API. Azure is only used by the API.
 
 ## Repository Structure
 
+```
 raceday-system/
-├── docs/
-│ ├── erd.png # Entity Relationship Diagram
-│ ├── api-endpoint-plan.md # Full API endpoint plan
-│ ├── raceday-schema.sql # SQL Server database creation script
-│ └── ci-success.png # Screenshot of a successful CI run
-├── .github/workflows/
-│ └── validate-structure.yml # CI workflow validating repo structure
-└── README.md
+  docs/                  Part 1 and Part 2 documents, plus part3/ screenshots
+  Part2-API/             REST API + unit tests (Dockerfile inside RaceDayApi/)
+  Part3-MVC/RaceDayWeb/  MVC front end (Dockerfile inside)
+  docker-compose.yml     Runs SQL Server + API + MVC
+  .env.example           Settings template
+  .github/workflows/     CI workflows
+```
 
+## Run with Docker (single command)
 
-## Database Design
+1. Install Docker Desktop.
+2. Clone and configure:
+```
+git clone https://github.com/St10456708/raceday-system.git
+cd raceday-system
+copy .env.example .env
+```
+3. Open `.env` and paste your Azure Storage connection string into `AZURE_BLOB_CONNECTION_STRING` (container `raceday-images`, public access level "Blob").
+4. Start everything:
+```
+docker compose up --build
+```
+5. Open the app: http://localhost:8080 (API Swagger: http://localhost:5018/swagger).
+6. Register one Organiser and one Participant to try both interfaces. The database is created automatically.
 
-The RaceDay data model consists of six entities: Users, Events, Venues, Categories, Enrolments, and Results. Full details, including primary keys, foreign keys, and cardinality, are documented in `docs/erd.png`. The corresponding schema is implemented in `docs/raceday-schema.sql` and matches the ERD exactly.
+Stop with `Ctrl+C`; remove containers and data with `docker compose down -v`.
 
-## API Plan
+## Azure Blob Storage Setup
 
-The full REST API endpoint plan — covering authentication, user profiles, events, categories, event enrolments, and results — is documented in `docs/api-endpoint-plan.md`.
+Storage account -> Container `raceday-images` -> Anonymous access level: Blob. Copy the connection string (Access keys) into `.env`.
+Uploads go MVC -> API (multipart) -> Azure Blob. The public blob URL is stored in the database and displayed by the MVC app.
 
 ## Continuous Integration
 
-A GitHub Actions workflow (`.github/workflows/validate-structure.yml`) runs on every push to confirm the `/docs` folder and all required planning documents are present.
+GitHub Actions (`.github/workflows/part3-build.yml`) validates the repository structure, builds and tests the API, builds the MVC project and builds the Docker images on every push.
 
-![CI success](docs/ci-success.png)
+![CI success Part 3](docs/part3/ci-success-part3.png)
+
+## Screenshots
+
+![Dashboard](docs/part3/02-organiser-dashboard.png)
+![Event detail](docs/part3/08-event-detail.png)
+![My results](docs/part3/13-my-results.png)
 
 ## Video Walkthrough
 
-Watch the full planning walkthrough here: [YouTube link](https://youtu.be/VwANrvkZYzs)
+Part 3 demo (unlisted): [YouTube link](PASTE-YOUTUBE-LINK-HERE)
 
-The video covers: the ERD design decisions, the API endpoint plan choices, the SQL script design, and a live run of the SQL script in SQL Server Management Studio (SSMS).
-Expand system description in README
+Part 1 planning video: [YouTube link](https://youtu.be/VwANrvkZYzs)
