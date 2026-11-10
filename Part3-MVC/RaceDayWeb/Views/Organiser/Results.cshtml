@@ -1,0 +1,56 @@
+﻿@model ResultsPage
+@{
+    ViewData["Title"] = "Results Entry";
+}
+<a asp-action="Events" class="btn btn-link ps-0">← Manage events</a>
+<h2>Results - @Model.Event.EventName</h2>
+<p class="text-muted">Enter finish time (hh:mm:ss) and finishing position for each participant. Saving publishes the result to the participant's "My Results" page. Mark the event as <strong>Completed</strong> from Edit when you are done.</p>
+
+<div class="rd-card">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr><th>Bib</th><th>Participant</th><th>Category</th><th>Result</th></tr></thead>
+            <tbody>
+                @foreach (var en in Model.Enrolments)
+                {
+                    <tr>
+                        <td>@en.BibNumber</td>
+                        <td>@en.ParticipantName</td>
+                        <td>@en.CategoryName</td>
+                        <td>
+                            @if (Model.Existing.TryGetValue(en.EnrolmentId, out var r))
+                            {
+                                <partial name="_StatusBadge" model="r.Status" />
+                                @if (r.Status == "Finished")
+                                {
+                                    <span class="ms-2">@r.FinishTime - position @r.Position</span>
+                                }
+                            }
+                            else
+                            {
+                                <form asp-action="SaveResult" method="post" class="row g-2">
+                                    <input type="hidden" name="EnrolmentId" value="@en.EnrolmentId" />
+                                    <input type="hidden" name="EventId" value="@Model.Event.EventId" />
+                                    <div class="col-auto">
+                                        <select name="Status" class="form-select form-select-sm">
+                                            <option>Finished</option>
+                                            <option>DNF</option>
+                                            <option>DNS</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto"><input name="FinishTime" class="form-control form-control-sm" placeholder="00:52:14" pattern="\d{2}:\d{2}:\d{2}" style="width:110px" /></div>
+                                    <div class="col-auto"><input name="Position" type="number" min="1" class="form-control form-control-sm" placeholder="Position" style="width:100px" /></div>
+                                    <div class="col-auto"><button class="btn btn-rd btn-sm">Publish</button></div>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Enrolments.Any())
+                {
+                    <tr><td colspan="4" class="text-center text-muted py-4">No confirmed participants to capture results for.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
