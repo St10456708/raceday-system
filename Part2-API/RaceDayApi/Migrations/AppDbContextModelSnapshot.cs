@@ -56,6 +56,10 @@ namespace RaceDayApi.Migrations
                         .HasColumnType("varchar(20)")
                         .HasColumnName("phone_number");
 
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("profile_picture_url");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("varchar(20)")
@@ -169,6 +173,10 @@ namespace RaceDayApi.Migrations
                         .HasColumnName("event_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
+
+                    b.Property<string>("BannerUrl")
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("banner_url");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
