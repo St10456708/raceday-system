@@ -1,0 +1,33 @@
+﻿@model EnrolmentsPage
+@{
+    ViewData["Title"] = "Enrolments";
+}
+<a asp-action="Events" class="btn btn-link ps-0">← Manage events</a>
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+    <h2>Enrolments - @Model.Event.EventName</h2>
+    <a class="btn btn-rd" asp-action="Results" asp-route-eventId="@Model.Event.EventId">Capture results</a>
+</div>
+<p class="text-muted">@Model.Items.Count(i => i.Status == "Confirmed") confirmed of @Model.Items.Count total enrolments.</p>
+<div class="rd-card">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr><th>Bib</th><th>Participant</th><th>Category</th><th>Enrolled</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var i in Model.Items)
+                {
+                    <tr>
+                        <td>@i.BibNumber</td>
+                        <td>@i.ParticipantName</td>
+                        <td>@i.CategoryName</td>
+                        <td>@i.EnrolmentDate.ToString("dd MMM yyyy HH:mm")</td>
+                        <td><partial name="_StatusBadge" model="i.Status" /></td>
+                    </tr>
+                }
+                @if (!Model.Items.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">No participants have enrolled yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

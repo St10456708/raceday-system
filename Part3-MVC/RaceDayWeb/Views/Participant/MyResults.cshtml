@@ -1,0 +1,45 @@
+@model List<ResultRow>
+@{
+    ViewData["Title"] = "My Results";
+}
+<h2>My results</h2>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+<div class="rd-card">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var row in Model)
+                {
+                    <tr>
+                        <td><strong>@row.Result.EventName</strong></td>
+                        <td>@(row.EventDate?.ToString("dd MMM yyyy") ?? "-")</td>
+                        <td>@row.Result.CategoryName</td>
+                        <td>@(row.Result.FinishTime ?? "-")</td>
+                        <td>
+                            @if (row.Result.Position.HasValue)
+                            {
+                                @ViewHelpers.Ordinal(row.Result.Position.Value)
+                        
+                                <text> out of @row.Finishers finishers</text>
+                            }
+                            else
+                            {
+
+                                <text>-</text>
+                            }
+                        </td>
+                        <td><partial name="_StatusBadge" model="row.Result.Status" /></td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">No results yet. Results appear after an organiser publishes them.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

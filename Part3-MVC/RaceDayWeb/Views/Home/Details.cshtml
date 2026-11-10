@@ -1,0 +1,86 @@
+﻿@model EventDto
+@{
+    ViewData["Title"] = Model.EventName;
+    var role = Context.Session.GetString("Role");
+}
+<a asp-action="Index" class="btn btn-link ps-0">← All events</a>
+
+@if (!string.IsNullOrEmpty(Model.BannerUrl))
+{
+    <img src="@Model.BannerUrl" class="rd-banner rd-banner-lg" alt="@Model.EventName banner" />
+}
+else
+{
+    <div class="rd-banner rd-banner-lg rd-banner-ph">@ViewHelpers.TypeIcon(Model.EventType)</div>
+}
+
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+    <h1>@Model.EventName</h1>
+    <div><span class="badge bg-dark me-1">@Model.EventType</span><partial name="_StatusBadge" model="Model.Status" /></div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-lg-8">
+        <div class="rd-card p-4 mb-4">
+            <h4>About this event</h4>
+            <p>@(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided." : Model.Description)</p>
+        </div>
+
+        <div class="rd-card p-4">
+            <h4>Categories</h4>
+            @if (!Model.Categories.Any())
+            {
+                <p class="text-muted mb-0">The organiser has not added categories yet.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead><tr><th>Category</th><th>Distance</th><th>Price</th><th>Max</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach (var c in Model.Categories)
+                            {
+                                <tr>
+                                    <td>@c.CategoryName</td>
+                                    <td>@c.DistanceKm.ToString("0.##") km</td>
+                                    <td>R@c.Price.ToString("0.00")</td>
+                                    <td>@c.MaxParticipants</td>
+                                    <td class="text-end">
+                                        @if (Model.Status != "Upcoming")
+                                        {
+                                            <span class="text-muted small">Closed</span>
+                                        }
+                                        else if (role == "Participant")
+                                        {
+                                            <form asp-controller="Participant" asp-action="Enrol" method="post">
+                                                <input type="hidden" name="categoryId" value="@c.CategoryId" />
+                                                <input type="hidden" name="eventId" value="@Model.EventId" />
+                                                <button class="btn btn-rd btn-sm">Enter event</button>
+                                            </form>
+                                        }
+                                        else if (role == null)
+                                        {
+                                            <a class="btn btn-outline-rd btn-sm" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">Log in to enter</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="rd-card p-4">
+            <h4>Event details</h4>
+            <p class="mb-2">📅 <strong>@Model.EventDate.ToString("dddd, dd MMMM yyyy")</strong></p>
+            @if (Model.Venue != null)
+            {
+                <p class="mb-2">📍 <strong>@Model.Venue.VenueName</strong><br />@Model.Venue.Address, @Model.Venue.City</p>
+            }
+            <p class="mb-0">🏷️ @Model.EventType event</p>
+        </div>
+    </div>
+</div>

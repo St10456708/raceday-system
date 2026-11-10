@@ -1,0 +1,66 @@
+@model List<DashboardRow>
+@{
+    ViewData["Title"] = "Organiser Dashboard";
+    var upcoming = Model.Where(r => r.Event.Status == "Upcoming").OrderBy(r => r.Event.EventDate).ToList();
+    var today = DateOnly.FromDateTime(DateTime.Today);
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="m-0">Organiser dashboard</h2>
+    <a asp-action="CreateEvent" class="btn btn-rd">+ Create event</a>
+</div>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="rd-card rd-stat"><div class="n">@Model.Count</div>Events created</div></div>
+    <div class="col-md-4"><div class="rd-card rd-stat"><div class="n">@upcoming.Count</div>Upcoming events</div></div>
+    <div class="col-md-4"><div class="rd-card rd-stat"><div class="n">@Model.Sum(r => r.Confirmed)</div>Total enrolments</div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="rd-card p-3">
+            <h4>Enrolments per event</h4>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead><tr><th>Event</th><th>Date</th><th>Status</th><th>Confirmed</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var r in Model)
+                        {
+                            <tr>
+                                <td><strong>@r.Event.EventName</strong></td>
+                                <td>@r.Event.EventDate.ToString("dd MMM yyyy")</td>
+                                <td><partial name="_StatusBadge" model="r.Event.Status" /></td>
+                                <td>@r.Confirmed</td>
+                                <td class="text-end"><a class="btn btn-sm btn-outline-rd" asp-action="Enrolments" asp-route-eventId="@r.Event.EventId">View</a></td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr><td colspan="5" class="text-center text-muted py-4">No events yet - create your first one.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="rd-card p-3">
+            <h4>Upcoming dates</h4>
+            @foreach (var r in upcoming)
+            {
+                var days = r.Event.EventDate.DayNumber - today.DayNumber;
+                <div class="d-flex justify-content-between border-bottom py-2">
+                    <div><strong>@r.Event.EventName</strong><br /><small class="text-muted">@r.Event.EventDate.ToString("dd MMM yyyy")</small></div>
+                    <span class="badge status-upcoming rd-status align-self-center">@(days < 0 ? "Past date" : days == 0 ? "Today" : "in " + days + " days")</span>
+                </div>
+            }
+            @if (!upcoming.Any())
+            {
+                <p class="text-muted mb-0">No upcoming events.</p>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,226 @@
+:root {
+    --navy: #0B1F3A;
+    --orange: #FF5A1F;
+    --orange-d: #E04A12;
+    --lime: #C6F432;
+    --bg: #F4F6FA;
+    --ink: #14213D
+}
+
+body {
+    font-family: 'Inter',system-ui,sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column
+}
+
+main {
+    flex: 1
+}
+
+h1, h2, h3, h4, h5, .rd-brand {
+    font-family: 'Barlow Condensed','Arial Narrow',sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-weight: 700
+}
+
+a {
+    color: var(--orange-d)
+}
+
+.rd-nav {
+    background: var(--navy);
+    border-bottom: 4px solid var(--orange)
+}
+
+.rd-brand {
+    font-size: 1.7rem;
+    color: #fff !important
+}
+
+    .rd-brand span {
+        color: var(--orange)
+    }
+
+.rd-nav .nav-link {
+    color: #dbe4f0;
+    font-weight: 500
+}
+
+    .rd-nav .nav-link:hover {
+        color: var(--lime)
+    }
+
+.rd-role {
+    background: var(--lime);
+    color: var(--navy)
+}
+
+.rd-nav-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--orange)
+}
+
+.rd-hero {
+    background: linear-gradient(120deg,var(--navy) 0%,#17396b 60%,var(--orange) 140%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 1.5rem
+}
+
+    .rd-hero h1 {
+        font-size: 3rem;
+        margin: 0
+    }
+
+    .rd-hero p {
+        margin: .5rem 0 0;
+        color: #dbe4f0
+    }
+
+.btn-rd {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+    font-weight: 600
+}
+
+    .btn-rd:hover {
+        background: var(--orange-d);
+        border-color: var(--orange-d);
+        color: #fff
+    }
+
+.btn-outline-rd {
+    border-color: var(--orange);
+    color: var(--orange-d)
+}
+
+    .btn-outline-rd:hover {
+        background: var(--orange);
+        border-color: var(--orange);
+        color: #fff
+    }
+
+.rd-card {
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(11,31,58,.08);
+    overflow: hidden;
+    background: #fff;
+    transition: transform .15s
+}
+
+    .rd-card.hover:hover {
+        transform: translateY(-4px)
+    }
+
+.rd-banner {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    display: block
+}
+
+.rd-banner-ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    background: linear-gradient(135deg,var(--navy),var(--orange))
+}
+
+.rd-banner-lg {
+    height: 320px;
+    border-radius: 14px;
+    margin-bottom: 1rem
+}
+
+.rd-status {
+    font-size: .78rem;
+    padding: .4em .8em;
+    border-radius: 50rem;
+    font-weight: 600;
+    color: #fff
+}
+
+.status-confirmed, .status-finished {
+    background: #1FA85A
+}
+
+.status-pending, .status-dnf {
+    background: #FFB020;
+    color: #3a2a00
+}
+
+.status-cancelled, .status-dns {
+    background: #D64545
+}
+
+.status-upcoming {
+    background: #2F6FED
+}
+
+.status-completed {
+    background: #5B6B82
+}
+
+.rd-stat {
+    padding: 1.2rem;
+    text-align: center
+}
+
+    .rd-stat .n {
+        font-family: 'Barlow Condensed',sans-serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--orange)
+    }
+
+.rd-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--orange)
+}
+
+.rd-avatar-ph {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    border: 4px solid var(--orange)
+}
+
+.table thead th {
+    text-transform: uppercase;
+    font-size: .75rem;
+    letter-spacing: .06em;
+    color: #5b6b82
+}
+
+.rd-footer {
+    background: var(--navy);
+    color: #9fb0c7;
+    padding: 1.2rem 0;
+    margin-top: 2rem;
+    border-top: 4px solid var(--orange)
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 .2rem rgba(255,90,31,.2)
+}

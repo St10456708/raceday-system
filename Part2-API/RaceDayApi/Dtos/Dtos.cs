@@ -126,6 +126,9 @@ public class UpdateEventRequest
     /// <example>Upcoming</example>
     [Required]
     public string Status { get; set; } = string.Empty;
+
+    /// <summary>Optional: new venue details.</summary>
+    public VenueRequest? Venue { get; set; }
 }
 
 /// <summary>Data needed to create or update a race category.</summary>
@@ -171,14 +174,14 @@ public record MessageResponse(string Message);
 
 public record AuthResponse(int UserId, string FullName, string Email, string Role, string Message);
 
-public record UserResponse(int UserId, string FullName, string Email, string Role, string? PhoneNumber);
+public record UserResponse(int UserId, string FullName, string Email, string Role, string? PhoneNumber, string? ProfilePictureUrl = null);
 
 public record VenueResponse(int VenueId, string VenueName, string Address, string City, decimal? Latitude, decimal? Longitude);
 
 public record CategoryResponse(int CategoryId, int EventId, string CategoryName, decimal DistanceKm, decimal Price, int MaxParticipants);
 
 public record EventResponse(int EventId, int OrganiserId, string EventName, string? Description, DateOnly EventDate,
-    string EventType, string Status, VenueResponse? Venue, List<CategoryResponse> Categories);
+    string EventType, string Status, VenueResponse? Venue, List<CategoryResponse> Categories, string? BannerUrl = null);
 
 public record EnrolmentResponse(int EnrolmentId, int ParticipantId, string ParticipantName, int CategoryId, string CategoryName,
     int EventId, string EventName, string? BibNumber, string Status, DateTime EnrolmentDate);
@@ -198,7 +201,8 @@ public static class Mapper
             e.Venue == null
                 ? null
                 : new VenueResponse(e.Venue.VenueId, e.Venue.VenueName, e.Venue.Address, e.Venue.City, e.Venue.Latitude, e.Venue.Longitude),
-            e.Categories.Select(c => c.ToResponse()).ToList());
+            e.Categories.Select(c => c.ToResponse()).ToList(),
+            e.BannerUrl);
 
     // Needs Participant, Category and Category.Event to be loaded.
     public static EnrolmentResponse ToResponse(this Enrolment e) =>

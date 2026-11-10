@@ -154,6 +154,14 @@ public class EventsController : ApiControllerBase
         ev.EventDate = request.EventDate!.Value;
         ev.EventType = request.EventType;
         ev.Status = request.Status;
+        if (request.Venue != null && ev.Venue != null)
+        {
+            ev.Venue.VenueName = request.Venue.VenueName.Trim();
+            ev.Venue.Address = request.Venue.Address.Trim();
+            ev.Venue.City = request.Venue.City.Trim();
+            ev.Venue.Latitude = request.Venue.Latitude;
+            ev.Venue.Longitude = request.Venue.Longitude;
+        }
         await _db.SaveChangesAsync();
 
         return Ok(ev.ToResponse());
