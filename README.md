@@ -65,9 +65,9 @@ GitHub Actions (`.github/workflows/part3-build.yml`) validates the repository st
 
 ## Screenshots
 
-![Dashboard](docs/part3/02-organiser-dashboard.png)
-![Event detail](docs/part3/08-event-detail.png)
-![My results](docs/part3/13-my-results.png)
+![Dashboard](docs/part3/organiser dashboard.png)
+![Event detail](docs/part3/event detail.png)
+![My results](docs/part3/my results.png)
 
 ## Video Walkthrough
 
