@@ -18,8 +18,6 @@ public class UsersController : ApiControllerBase
     }
 
     /// <summary>View my own profile (Organiser or Participant).</summary>
-    /// <response code="200">Returns the logged-in user's profile.</response>
-    /// <response code="401">Not logged in.</response>
     [HttpGet("me")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MessageResponse), StatusCodes.Status401Unauthorized)]
@@ -31,14 +29,10 @@ public class UsersController : ApiControllerBase
             return Unauthorized(new MessageResponse("Your account no longer exists."));
         }
 
-        return Ok(new UserResponse(user.UserId, user.FullName, user.Email, user.Role, user.PhoneNumber));
+        return Ok(new UserResponse(user.UserId, user.FullName, user.Email, user.Role, user.PhoneNumber, user.ProfilePictureUrl));
     }
 
     /// <summary>Update my own profile (full name and phone number).</summary>
-    /// <remarks>Send fullName (required) and phoneNumber (optional). Email, password and role cannot be changed here.</remarks>
-    /// <response code="200">Returns the updated profile.</response>
-    /// <response code="400">Invalid data.</response>
-    /// <response code="401">Not logged in.</response>
     [HttpPut("me")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -55,6 +49,6 @@ public class UsersController : ApiControllerBase
         user.PhoneNumber = request.PhoneNumber;
         await _db.SaveChangesAsync();
 
-        return Ok(new UserResponse(user.UserId, user.FullName, user.Email, user.Role, user.PhoneNumber));
+        return Ok(new UserResponse(user.UserId, user.FullName, user.Email, user.Role, user.PhoneNumber, user.ProfilePictureUrl));
     }
 }
