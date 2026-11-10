@@ -1,0 +1,33 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD:?Copy .env.example to .env first}
+    volumes:
+      - sqldata:/var/opt/mssql
+
+  api:
+    build: ./Part2-API/RaceDayApi
+    depends_on:
+      - sqlserver
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=RaceDayApiDB;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+      AzureBlob__ConnectionString: ${AZURE_BLOB_CONNECTION_STRING}
+      AzureBlob__ContainerName: ${AZURE_BLOB_CONTAINER:-raceday-images}
+    ports:
+      - "5018:8080"
+
+  web:
+    build: ./Part3-MVC/RaceDayWeb
+    depends_on:
+      - api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      Api__BaseUrl: http://api:8080/
+    ports:
+      - "8080:8080"
+
+volumes:
+  sqldata:
